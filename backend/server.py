@@ -272,6 +272,9 @@ async def upload_audio(meeting_id: str, audio_file: UploadFile = File(...)):
         updated_meeting = await db.meetings.find_one({"id": meeting_id})
         return Meeting(**updated_meeting)
         
+    except HTTPException:
+        # Re-raise HTTP exceptions (like 404) without modification
+        raise
     except Exception as e:
         logging.error(f"Error processing audio: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing audio: {str(e)}")
